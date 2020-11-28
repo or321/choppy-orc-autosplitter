@@ -1,11 +1,11 @@
-
 // Start the Construct 2 project running on window load.
-jQuery(document).ready(function ()
-{			
+jQuery(document).ready(function () {
 	// Create new runtime using the c2canvas
-	cr_createRuntime("c2canvas");
-	
+	window.game = cr_createRuntime("c2canvas");
+
 	cr_sizeCanvas(jQuery(window).width(), jQuery(window).height());
+
+	_autosplitter.onScene("Menu");
 });
 
 // Pause and resume on page becoming visible/invisible
