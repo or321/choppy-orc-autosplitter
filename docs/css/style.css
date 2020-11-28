@@ -1,0 +1,146 @@
+/* All margins and padding must be zero for the canvas to fill the screen. */
+* {
+    padding: 0;
+    margin: 0;
+}
+
+html,
+body {
+    background: #000;
+    color: #fff;
+    overflow: hidden;
+    touch-action-delay: none;
+    touch-action: none;
+    -ms-touch-action: none;
+}
+
+canvas {
+    touch-action-delay: none;
+    touch-action: none;
+    -ms-touch-action: none;
+}
+
+.td-spacer {
+    width: 20px;
+}
+
+.data-number {
+    color: rgb(0, 173, 0);
+}
+
+.fake-speedrun .data-number {
+    color: rgb(255, 70, 70);
+}
+
+.h-align-center {
+    margin: auto;
+}
+
+.autosplitter-data {
+    position: fixed;
+    width: 100%;
+    background-color: #2121218c;
+    font-weight: bold;
+    font-size: 40px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    padding: 5px;
+
+    user-select: none;
+}
+
+@media (max-width: 1330px) {
+    .autosplitter-data {
+        font-size: 3vw;
+    }
+}
+
+@media (max-width: 1330px) {
+    .autosplitter-data {
+        font-size: 3vw;
+    }
+}
+
+.autosplitter-data div {
+    display: inline-block;
+}
+
+.speedrun-stats-modal {
+    /* Hidden by default */
+    display: none;
+
+    position: fixed;
+    z-index: 1;
+
+    width: 320px;
+    min-height: 180px;
+
+    background-color: #212121fb;
+    border: 1px solid white;
+
+    font-weight: bold;
+    font-size: 27px;
+}
+
+.speedrun-stats-table {
+    margin: 5px auto;
+}
+
+.speedrun-stats-title {
+    text-align: center;
+    text-decoration: underline;
+}
+
+.extra-stats-button {
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    padding: 10px;
+
+    background-color: transparent;
+    border: 1px solid white;
+
+    cursor: pointer;
+    outline: 0;
+
+    color: white;
+
+    font-size: 18px;
+}
+
+.extra-stats-button:hover {
+    background-color: #333333ee;
+}
+
+.extra-speedrun-stats-modal {
+    /* Hidden by default */
+    display: none;
+
+    position: fixed;
+    right: 332px;
+    bottom: 60px;
+    z-index: 1;
+    padding: 5px;
+
+    width: 800px;
+    min-height: 400px;
+
+    background-color: #212121fb;
+    border: 1px solid white;
+
+    font-weight: bold;
+    font-size: 27px;
+}
+
+.levels-times-title {
+    margin-top: 20px;
+    width: 200px;
+    text-decoration: underline;
+}
+
+
+.fps-counter {
+    float: right;
+    margin-right: 10px;
+}
