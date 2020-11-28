@@ -89,7 +89,7 @@ class Video {
 			case 3:
 				return "Down   ";
 			case 4:
-				return "Dash   ";
+				return "Axe    ";
 		}
 		return "???    ";
 	}
