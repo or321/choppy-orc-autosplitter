@@ -10103,7 +10103,11 @@ function qc(e) {
 	R.k = new C;
 	P.prototype.Play = function (a, b, c, d) {
 		// AUTOSPLITTER 4 - on playing a sound file
-		_autosplitter.onSound(a[0]);
+		var soundName = a[0];
+		_autosplitter.onSound(soundName);
+
+		if (soundName.indexOf("rolemusi") >= 0 && _volumeHandler.isMusicSilent())
+			return;
 
 		!Z && (c = Math.pow(10, c / 20),
 			isFinite(c) || (c = 0),

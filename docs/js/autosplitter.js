@@ -257,6 +257,10 @@ _autosplitter = (function () {
 				"bottom",
 				canvas_marginTop + autosplitter_bar_height + 10 + "px"
 			);
+
+		$("#div_music_volume")
+			.css("right", canvas_marginLeft + "px")
+			.css("top", canvas_marginTop + "px");
 	};
 
 	/**********
