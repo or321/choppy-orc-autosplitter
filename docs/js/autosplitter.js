@@ -124,6 +124,8 @@ _autosplitter = (function () {
 				state.speedrunTime = 0;
 				$("#speedrun_timer").text((0).toFixed(decimal_places_display));
 			}
+
+			$("#div_chest1_timer").toggle(chestsInLevel[state.level - 1] == 2);
 		} else {
 			// Hide info/timers if we entered the menu or credits
 			document.getElementById("level_timer").innerText = "---";
@@ -135,6 +137,8 @@ _autosplitter = (function () {
 				$("#speedrun_timer").text("---");
 				$("#transition_timer").text("---");
 			}
+
+			$("#div_chest1_timer").hide();
 		}
 
 		state.speedrun_mode_active = !state.in_menu && isInSpeedrun();
@@ -209,6 +213,13 @@ _autosplitter = (function () {
 			$("#level_timer").text(
 				state.levelTime.toFixed(decimal_places_display)
 			);
+
+			// Update the timer for chest #1 only when the player didn't collect any chests yet
+			if (state.damselCount == 0) {
+				$("#chest1_timer").text(
+					state.levelTime.toFixed(decimal_places_display)
+				);
+			}
 		}
 
 		// Only when we are in speedrun mode, update the speedrun and transition timers for the current frame
@@ -246,21 +257,19 @@ _autosplitter = (function () {
 
 		$("#speedrun_stats")
 			.css("right", canvas_marginLeft + 1 + "px")
-			.css(
-				"bottom",
-				canvas_marginTop + autosplitter_bar_height + 10 + "px"
-			);
+			.css("bottom", canvas_marginTop + autosplitter_bar_height + 10 + "px");
 
 		$("#extra_speedrun_stats")
 			.css("right", canvas_marginLeft + 320 + "px")
-			.css(
-				"bottom",
-				canvas_marginTop + autosplitter_bar_height + 10 + "px"
-			);
+			.css("bottom", canvas_marginTop + autosplitter_bar_height + 10 + "px");
 
 		$("#div_music_volume")
 			.css("right", canvas_marginLeft + "px")
 			.css("top", canvas_marginTop + "px");
+
+		$("#div_chest1_timer")
+			.css("left", canvas_marginLeft - 1 + "px")
+			.css("bottom", canvas_marginTop + autosplitter_bar_height + 10 + "px");
 	};
 
 	/**********

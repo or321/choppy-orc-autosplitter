@@ -66,6 +66,30 @@ canvas {
 	display: inline-block;
 }
 
+
+.chest1-timer {
+	display: none;
+
+	position: fixed;
+
+	padding: 0px 10px;
+
+	background-color: #2121218c;
+	border: 1px solid black;
+
+	font-weight: bold;
+	font-size: 40px;
+	text-align: center;
+	user-select: none;
+}
+
+@media (max-width: 1330px) {
+	.chest1-timer {
+		font-size: 3vw;
+	}
+}
+
+
 .speedrun-stats-modal {
 	/* Hidden by default */
 	display: none;
