@@ -4,7 +4,7 @@ _autosplitter = (function () {
 	var wrs = [
 		"3.09",
 		"2.75",
-		"4.11",
+		"4.10",
 		"3.40",
 		"2.21",
 		"4.87",
@@ -178,8 +178,8 @@ _autosplitter = (function () {
 		// Show stats for the last speedrun on the menu or credits, hide them during gameplay
 		$("#speedrun_stats").toggle(
 			state.show_speedrun_stats &&
-			(state.in_menu ||
-				(state.in_credits && state.speedrun_mode_active))
+				(state.in_menu ||
+					(state.in_credits && state.speedrun_mode_active))
 		);
 
 		if (state.in_level) {
