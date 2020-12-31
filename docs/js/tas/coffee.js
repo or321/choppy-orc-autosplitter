@@ -558,7 +558,7 @@ Video.showActionCode = function(actionCode) {
 		return "Right  ";
 	case 3:
 		return "Down   ";
-	case 4:
+	case 4:case 5:
 		return "Axe    ";
 	}
 	return "???    ";
@@ -808,7 +808,7 @@ js_Boot.__toStr = ({ }).toString;
 Video.headerSize = 24;
 Video.delaySize = 5;
 Video.longDelaySize = 10;
-Video.keyCodes = [37,38,39,40,88];
+Video.keyCodes = [37,38,39,40,88,32];
 haxe_crypto_Base64.CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 Main.main();
 })(typeof window != "undefined" ? window : typeof global != "undefined" ? global : typeof self != "undefined" ? self : this);
