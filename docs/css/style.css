@@ -50,18 +50,6 @@ canvas {
 	user-select: none;
 }
 
-@media (max-width: 1330px) {
-	.autosplitter-data {
-		font-size: 3vw;
-	}
-}
-
-@media (max-width: 1330px) {
-	.autosplitter-data {
-		font-size: 3vw;
-	}
-}
-
 .autosplitter-data div {
 	display: inline-block;
 }
@@ -73,14 +61,13 @@ canvas {
 	position: fixed;
 	z-index: 1;
 
-	width: 320px;
-	min-height: 180px;
-
 	background-color: #212121fb;
 	border: 1px solid white;
 
 	font-weight: bold;
 	font-size: 27px;
+
+	user-select: none;
 }
 
 .speedrun-stats-table {
@@ -93,20 +80,20 @@ canvas {
 }
 
 .extra-stats-button {
-	position: absolute;
 	bottom: 0px;
 	width: 100%;
 	padding: 10px;
+
+	box-sizing: border-box;
 
 	background-color: transparent;
 	border: 1px solid white;
 
 	cursor: pointer;
 	outline: 0;
+	text-align: center;
 
 	color: white;
-
-	font-size: 18px;
 }
 
 .extra-stats-button:hover {
@@ -123,19 +110,19 @@ canvas {
 	z-index: 1;
 	padding: 5px;
 
-	width: 800px;
-	min-height: 400px;
+	min-width: 460px;
 
 	background-color: #212121fb;
 	border: 1px solid white;
 
 	font-weight: bold;
-	font-size: 27px;
+
+	user-select: none;
 }
 
 .levels-times-title {
 	margin-top: 20px;
-	width: 200px;
+	width: 25%;
 	text-decoration: underline;
 }
 
