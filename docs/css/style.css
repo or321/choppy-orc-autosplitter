@@ -122,7 +122,8 @@ canvas {
 
 .levels-times-title {
 	margin-top: 20px;
-	width: 25%;
+	width: 100%;
+	text-align: center;
 	text-decoration: underline;
 }
 
