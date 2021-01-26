@@ -252,7 +252,7 @@ _autosplitter = (function () {
 				canvas_marginTop + autosplitter_bar_height + 10 + "px"
 			)
 			.width(canvas_w * (1 / 6))
-			.fitText(1.2);
+			.fitText(1.25);
 
 		var speedrun_stats_modal_width = $("#speedrun_stats").width();
 
