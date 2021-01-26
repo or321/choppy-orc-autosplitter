@@ -178,8 +178,8 @@ _autosplitter = (function () {
 		// Show stats for the last speedrun on the menu or credits, hide them during gameplay
 		$("#speedrun_stats").toggle(
 			state.show_speedrun_stats &&
-			(state.in_menu ||
-				(state.in_credits && state.speedrun_mode_active))
+				(state.in_menu ||
+					(state.in_credits && state.speedrun_mode_active))
 		);
 
 		if (state.in_level) {
@@ -257,7 +257,10 @@ _autosplitter = (function () {
 		var speedrun_stats_modal_width = $("#speedrun_stats").width();
 
 		$("#extra_speedrun_stats")
-			.css("right", canvas_marginLeft + speedrun_stats_modal_width + 3 + "px")
+			.css(
+				"right",
+				canvas_marginLeft + speedrun_stats_modal_width + 3 + "px"
+			)
 			.css(
 				"bottom",
 				canvas_marginTop + autosplitter_bar_height + 10 + "px"
@@ -306,7 +309,7 @@ _autosplitter = (function () {
 
 	$(document).keydown(function (e) {
 		// Detect press on "Z"
-		if (e.which == 90 || e.which == 122) {
+		if (e.which == 90) {
 			// Press on W instead
 			var downEvent = jQuery.Event("keydown");
 			downEvent.which = 87;
@@ -316,7 +319,7 @@ _autosplitter = (function () {
 
 	$(document).keyup(function (e) {
 		// Detect press on "Z"
-		if (e.which == 90 || e.which == 122) {
+		if (e.which == 90) {
 			// Press on W instead
 			var upEvent = jQuery.Event("keyup");
 			upEvent.which = 87;
