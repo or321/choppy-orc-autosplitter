@@ -10,13 +10,13 @@ _autosplitter = (function () {
 		"4.87",
 		"6.30",
 		"3.97",
-		"4.58",
-		"5.72",
+		"4.51",
+		"5.71",
 		"4.05",
 		"3.93",
-		"10.51",
+		"10.47",
 		"5.92",
-		"2.78",
+		"2.77",
 	];
 
 	var decimal_places_display = window.tas_mode_active ? 3 : 2;
