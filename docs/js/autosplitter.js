@@ -15,8 +15,8 @@ _autosplitter = (function () {
 		"4.05",
 		"3.89",
 		"10.47",
-		"5.83",
-		"2.74",
+		"5.59",
+		"2.72",
 	];
 
 	var decimal_places_display = window.tas_mode_active ? 3 : 2;
