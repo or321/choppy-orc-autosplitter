@@ -10223,7 +10223,7 @@ function rc(e) {
 
 		if (!this.b.zb) {
 			// TAS - hijacking keyboard inputs into the coffee script
-			if (window.tas_mode_active) {
+			if (TAS_MODE) {
 				window.coffee._keydown(function (m) {
 					e.yp(m);
 				});
