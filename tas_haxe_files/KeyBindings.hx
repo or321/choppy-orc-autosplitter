@@ -20,7 +20,7 @@ class KeyBindings {
             case 83: return Some(PlaySlow); // s
             case 68: return Some(PlayNormal); // d
             case 70: return Some(PlayFast); // f
-            case 80: return Some(Replay); // p
+            case 13: return Some(Replay); // Enter
             case 82: return Some(Reset); // r
             case _: {
                 if (code >= 48 && code <= 57) {

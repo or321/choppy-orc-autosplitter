@@ -20,11 +20,13 @@ class PlayControl {
 }
 
 class Engine {
-	var frameLength:Float = 1000.0 / 60.0;
+	var frameLengthDecimalPlaces = 8;
+	var frameLength:Float = 1000.0 / 60;
+	var currentFps:Int = 60;
 
 	var control = new PlayControl();
 	var playback:Option<Video.VideoPlayer> = None; // If this is initialized, we're in playback.
-	var recording:Video.VideoRecorder = new Video.VideoRecorder(0);
+	var recording:Video.VideoRecorder = new Video.VideoRecorder(0, 60);
 	var slots:Array<Video>;
 
 	var fullgameVideo:Dynamic = null; // Special level-by-level videos for eddynardo.
@@ -32,9 +34,9 @@ class Engine {
 
 	var pausedCallback:Option<Dynamic> = None;
 	var fakeTime:Float = 0;
-
 	var _requestAnimationFrame:Dynamic;
 	var _now:Dynamic;
+
 	var initialDirection = 0;
 
 	public function new() {
@@ -45,6 +47,7 @@ class Engine {
 		untyped window.performance.now = function() {
 			return fakeTime;
 		}
+		fakeTime = _now();
 
 		// hook into the helper script
 		untyped window.coffee = {};
@@ -53,18 +56,30 @@ class Engine {
 		untyped window.coffee._keyup = this.keyup;
 		untyped window.coffee._keydown = this.keydown;
 
+		untyped window.coffee._getFPS = function() { return this.currentFps; }
+
 		// API for runners
-		untyped window.coffee.load = function(string:String) {
-			slots[0] = new Video(string);
+		untyped window.coffee.load = function(string:String, ?slot:Int) {
+			if (slot == null || slot > 9 || slot < 0)
+				slot = 0;
+			slots[slot] = new Video(string);
 		}
+
 		untyped window.coffee.loadFullGame = function(strings:Array<String>) {
 			fullgameVideo = strings.map(function(videoString) {
 				return new Video(videoString);
 			});
+
+			// Run the game on normal speed, because TAS commands are disabled in "full-game" mode
+			control.speed = 1;
+			control.paused = false;
+			triggerPausedCallback();
 		}
+
 		untyped window.coffee.clearFullGame = function(string:String) {
 			fullgameVideo = null;
 		}
+
 		untyped window.coffee.startLeft = function() {
 			initialDirection = 1;
 		}
@@ -74,11 +89,27 @@ class Engine {
 		untyped window.coffee.startNeutral = function() {
 			initialDirection = 0;
 		}
+
+		/*
 		untyped window.coffee.useFrame = function(fl) {
 			frameLength = fl;
 		}
+		*/
 
-		fakeTime = _now();
+		untyped window.coffee.setFPS = function(fps:Int) {
+			// Not allowing to manually change FPS if we are in playback
+			if (Util.isSome(playback))
+				return;
+
+			this.setFps(fps);
+			recording.recordFpsChange(control.frame, this.currentFps);
+		}
+
+		untyped window.coffee.fixSaveString = function(saveString:String){
+			var video = new Video(saveString, true);
+			video.initialFps = this.currentFps;
+			return video.toString();
+		}
 
 		slots = new Array();
 		for (i in 0...10) {
@@ -86,6 +117,11 @@ class Engine {
 		}
 
 		control.speed = 1;
+	}
+
+	function setFps(fps:Int) {
+		currentFps = (fps >= 1023) ? 1023 : (fps <= 30) ? 30 : Std.int(fps);
+		frameLength = truncateFloat(1000.0 / currentFps, frameLengthDecimalPlaces);
 	}
 
 	function wrapCallback(callback:Dynamic) {
@@ -97,6 +133,13 @@ class Engine {
 					for (action in player.getActions(control.frame)) {
 						sendGameInput(action.code, action.down);
 					}
+
+					var fpsAction = player.getFpsAction(control.frame);
+					if (fpsAction != null) {
+						setFps(fpsAction.fps);
+						recording.recordFpsChange(control.frame, fpsAction.fps);
+					}
+
 					if (control.frame + 1 >= player.video.pauseFrame) {
 						// playback is over
 
@@ -206,17 +249,17 @@ class Engine {
 		}
 		if (initialDirection == 1) {
 			if (buffer)
-				trace("---> Holding controls: LEFT.");
+				trace("---> Initial direction: LEFT");
 			sendGameInput(37, true);
 		}
 		if (initialDirection == 2) {
 			if (buffer)
-				trace("---> Holding controls: RIGHT.");
+				trace("---> Initial direction: RIGHT");
 			sendGameInput(39, true);
 		}
 		if (initialDirection == 0) {
 			if (buffer)
-				trace("---> Holding controls: NONE.");
+				trace("---> Initial direction: NONE");
 		}
 	}
 
@@ -224,9 +267,17 @@ class Engine {
 		if (replay == null)
 			replay = false;
 		trace('[${replay ? "REPLAY" : "RESET to"} ${(slot == null) ? "start" : "slot " + Std.string(slot) + "..."}]');
+
+		// Press the "r" key to trigger in-game reset
 		sendGameInput(82, true);
 		sendGameInput(82, false);
-		recording = new Video.VideoRecorder(initialDirection);
+
+		// Create a new instance of video-recorder only when there is no save-slot replay.
+		// Otherwise, the "loadPlayback" function will take care of it.
+		if (slot == null) {
+			recording = new Video.VideoRecorder(initialDirection, currentFps);
+		}
+		
 		control = new PlayControl();
 		primeControls(true);
 	}
@@ -234,7 +285,9 @@ class Engine {
 	function loadPlayback(video:Video) {
 		playback = Some(new Video.VideoPlayer(video));
 		initialDirection = video.initialDirection;
-		recording = new Video.VideoRecorder(initialDirection);
+		recording = new Video.VideoRecorder(initialDirection, video.initialFps);
+
+		setFps(video.initialFps);
 	}
 
 	// Keyboard interface.
@@ -290,8 +343,8 @@ class Engine {
 
 		// p to replay the video in slot 0 at normal speed
 		if (input == CoffeeInput.Replay) {
-			loadPlayback(slots[0]);
 			resetLevel(0, true);
+			loadPlayback(slots[0]);
 			control.speed = 1;
 			triggerPausedCallback();
 			return true;
@@ -302,8 +355,8 @@ class Engine {
 			case CoffeeInput.Slot(slot):
 				// replay slot
 				if (!ctrlKey) {
-					loadPlayback(slots[slot]);
 					resetLevel(slot);
+					loadPlayback(slots[slot]);
 					control.speed = 2;
 					if (altKey)
 						control.pause();
@@ -317,7 +370,7 @@ class Engine {
 					control.pause();
 					var video = recording.saveVideo(control.frame);
 					trace('[SAVE slot ${slot}] @ ${control.frame}');
-					trace('data: ${video.toString()}');
+					trace('Data: ${video.toString()}');
 					slots[slot] = video;
 					return true;
 				}
@@ -328,7 +381,12 @@ class Engine {
 	}
 
 	function onScene(levelNum:Int) {
+		// Function that is called when a level in the game is loaded.
+		// This function is called from the game code itself.
+
 		trace('[SCENE ${levelNum}]');
+
+		// If we are in full game mode, prepare a video playback for the current level as the player enters it
 		if (fullgameVideo != null && fullgameVideo.length >= levelNum) {
 			fullgameLevelCounter = levelNum;
 			loadPlayback(fullgameVideo[fullgameLevelCounter - 1]);
@@ -337,5 +395,14 @@ class Engine {
 			control.speed = 1;
 			primeControls(false);
 		}
+	}
+
+	function truncateFloat(number:Float, digits:Int):Float {
+		var re = new EReg("(\\d+\\.\\d{" + digits + "})(\\d)", "i");
+		var isMatched = re.match(Std.string(number));
+		if (isMatched){
+			return Std.parseFloat(re.matched(1));
+		}
+		else return number;
 	}
 }

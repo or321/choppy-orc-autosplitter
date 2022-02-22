@@ -179,8 +179,13 @@ _autosplitter = (function () {
 	The "frameTime" parameter is the time (in milliseconds) that elapsed since the last tick.
 	*/
 	var onUpdate = function (frameTime) {
-		// Update the FPS counter for the current frame
-		$("#fps_counter").text((1 / frameTime).toFixed());
+		if (TAS_MODE){
+			$("#fps_counter").text(window.coffee._getFPS());
+		}
+		else{
+			// Update the FPS counter for the current frame
+			$("#fps_counter").text((1 / frameTime).toFixed());
+		}
 
 		// Don't update timers on the menu or credits
 		if (!state.in_level) return;
