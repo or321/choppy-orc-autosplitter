@@ -201,6 +201,10 @@ class VideoRecorder {
 		if (currentFps == newFps)
 			return;
 
+		// Can't record anything on frame zero
+		if (frame == 0)
+			return;
+
 		// We want to allow changing FPS only once in a given frame.
 		// Check if there is already an FPS change in the current frame,
 		// and if so - replace it.
@@ -211,7 +215,7 @@ class VideoRecorder {
 		}
 
 		video.fpsActions.push({frame: frame, fps: newFps});
-		trace('FPS changed to ${newFps} @ ${frame}');
+		trace('---> FPS changed to ${newFps} @ ${frame}');
 	}
 
 	public function saveVideo(frame:Int):Video {

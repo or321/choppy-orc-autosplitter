@@ -126,8 +126,6 @@ class Engine {
 
 	function wrapCallback(callback:Dynamic) {
 		return function() {
-			fakeTime += frameLength;
-
 			switch playback {
 				case Some(player):
 					for (action in player.getActions(control.frame)) {
@@ -160,10 +158,12 @@ class Engine {
 
 						playback = None;
 					}
-					callback(fakeTime);
 				case None:
-					callback(fakeTime);
+					{}
 			}
+
+			fakeTime += frameLength;
+			callback(fakeTime);
 
 			control.frame += 1;
 		}
@@ -266,7 +266,7 @@ class Engine {
 	function resetLevel(?slot:Int, ?replay:Bool) {
 		if (replay == null)
 			replay = false;
-		trace('[${replay ? "REPLAY" : "RESET to"} ${(slot == null) ? "start" : "slot " + Std.string(slot) + "..."}]');
+		trace('[${replay ? "REPLAY" : "RESET to"} ${(slot == null) ? "start" : "slot " + Std.string(slot) + "..."}] @ 1');
 
 		// Press the "r" key to trigger in-game reset
 		sendGameInput(82, true);
@@ -297,8 +297,8 @@ class Engine {
 
 		// stepping frames
 		if (input == CoffeeInput.StepFrame && control.paused) {
-			trace('[STEP  ] @ ${control.frame + 1}');
 			triggerPausedCallback();
+			trace('[STEP  ] @ ${control.frame}');
 			return true;
 		}
 
@@ -327,6 +327,7 @@ class Engine {
 				control.paused = false;
 				if (oldControl.paused)
 					trace('[PLAY  ] @ ${control.frame}');
+
 				triggerPausedCallback();
 				return true;
 			}
@@ -358,9 +359,13 @@ class Engine {
 					resetLevel(slot);
 					loadPlayback(slots[slot]);
 					control.speed = 2;
-					if (altKey)
-						control.pause();
 					control.silent = true;
+
+					if (altKey) {
+						control.pause();
+						control.silent = false;
+					}
+					
 					triggerPausedCallback();
 					return true;
 				}

@@ -243,7 +243,6 @@ Engine.prototype = {
 	,wrapCallback: function(callback) {
 		var _gthis = this;
 		return function() {
-			_gthis.fakeTime += _gthis.frameLength;
 			var _g = _gthis.playback;
 			switch(_g[1]) {
 			case 0:
@@ -272,12 +271,12 @@ Engine.prototype = {
 					}
 					_gthis.playback = haxe_ds_Option.None;
 				}
-				callback(_gthis.fakeTime);
 				break;
 			case 1:
-				callback(_gthis.fakeTime);
 				break;
 			}
+			_gthis.fakeTime += _gthis.frameLength;
+			callback(_gthis.fakeTime);
 			_gthis.control.frame += 1;
 		};
 	}
@@ -382,7 +381,7 @@ Engine.prototype = {
 		if(replay == null) {
 			replay = false;
 		}
-		console.log("[" + (replay ? "REPLAY" : "RESET to") + " " + (slot == null ? "start" : "slot " + (slot == null ? "null" : "" + slot) + "...") + "]");
+		console.log("[" + (replay ? "REPLAY" : "RESET to") + " " + (slot == null ? "start" : "slot " + (slot == null ? "null" : "" + slot) + "...") + "] @ 1");
 		this.sendGameInput(82,true);
 		this.sendGameInput(82,false);
 		if(slot == null) {
@@ -400,8 +399,8 @@ Engine.prototype = {
 	,handleInterfaceInput: function(input,ctrlKey,altKey) {
 		var oldControl = JSON.parse(JSON.stringify(this.control));
 		if(input == CoffeeInput.StepFrame && this.control.paused) {
-			console.log("[STEP  ] @ " + (this.control.frame + 1));
 			this.triggerPausedCallback();
+			console.log("[STEP  ] @ " + this.control.frame);
 			return true;
 		}
 		if(input == CoffeeInput.Pause) {
@@ -453,10 +452,11 @@ Engine.prototype = {
 				this.resetLevel(slot);
 				this.loadPlayback(this.slots[slot]);
 				this.control.speed = 2;
+				this.control.silent = true;
 				if(altKey) {
 					this.control.pause();
+					this.control.silent = false;
 				}
-				this.control.silent = true;
 				this.triggerPausedCallback();
 				return true;
 			}
@@ -734,6 +734,9 @@ VideoRecorder.prototype = {
 		if(this.currentFps == newFps) {
 			return;
 		}
+		if(frame == 0) {
+			return;
+		}
 		if(this.video.fpsActions.length > 0) {
 			var lastAction = this.video.fpsActions[this.video.fpsActions.length - 1];
 			if(lastAction.frame == frame) {
@@ -741,7 +744,7 @@ VideoRecorder.prototype = {
 			}
 		}
 		this.video.fpsActions.push({ frame : frame, fps : newFps});
-		console.log("FPS changed to " + newFps + " @ " + frame);
+		console.log("---> FPS changed to " + newFps + " @ " + frame);
 	}
 	,saveVideo: function(frame) {
 		var res = this.video.copy();
