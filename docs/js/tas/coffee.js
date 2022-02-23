@@ -548,7 +548,7 @@ Main.main = function() {
 	Main.infoTrace("[0-9] to reset and play back video in the respective slot (used for save states).");
 	Main.infoTrace("Ctrl + [0-9] to save video in the respective slot.");
 	Main.infoTrace("Alt + [0-9] to play back video in the respective slot, pausing on frame 1.");
-	Main.infoTrace("[p] to reset and play the video in slot 0 in normal speed.");
+	Main.infoTrace("[Enter] to reset and play the video in slot 0 in normal speed.");
 	Main.infoTrace("`coffee.load(string)` to load a video into slot 0.");
 	Main.infoTrace("`coffee.startLeft()` / `coffee.StartRight()` / `coffee.StartNeutral()` - configure the inputs on frame 0 of a level.");
 	Main.infoTrace("`coffee.loadFullGame(array<string>)` to play a full game of several levels. Parameter is array of video codes.");
