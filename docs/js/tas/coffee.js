@@ -744,6 +744,7 @@ VideoRecorder.prototype = {
 			}
 		}
 		this.video.fpsActions.push({ frame : frame, fps : newFps});
+		this.currentFps = newFps;
 		console.log("---> FPS changed to " + newFps + " @ " + frame);
 	}
 	,saveVideo: function(frame) {

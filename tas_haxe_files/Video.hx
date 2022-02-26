@@ -215,6 +215,7 @@ class VideoRecorder {
 		}
 
 		video.fpsActions.push({frame: frame, fps: newFps});
+		currentFps = newFps;
 		trace('---> FPS changed to ${newFps} @ ${frame}');
 	}
 
