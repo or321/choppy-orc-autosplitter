@@ -57,6 +57,8 @@ _autosplitter = (function () {
 						state.level,
 						state.levelTime
 					);
+
+					console.log(`LEVEL ${state.level}: ${_speedrunStatsHandler.getSpeedrunStats().time.toFixed(2)}`);
 				}
 			}
 		}
